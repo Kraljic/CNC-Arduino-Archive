@@ -7,6 +7,7 @@ namespace cnc {
   }
   void EndProgram() {
     MoveZ(0);
+    MoveToHome();
     Sleep();
   }
   void MoveTool(double x, double y) {
@@ -44,7 +45,7 @@ namespace cnc {
     MoveZ(0);
     
     double n = 2.0d * PI / 75.0d;
-    for (double i = 0; i <= 2.0d*PI + 2*n; i+=n) {
+    for (double i = 0; i <= 2.0d * PI + n; i+=n) {
       x1 = width * sin(i) + x;
       y1 = height * cos(i) + y;
       MoveTo(x1, y1, false);

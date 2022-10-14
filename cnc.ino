@@ -25,4 +25,3 @@ void drawHouse() {
   cnc::MoveZ(0);
   cnc::Sleep();  
 }
-

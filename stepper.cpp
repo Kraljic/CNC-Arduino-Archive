@@ -14,6 +14,8 @@ namespace cnc {
   double stepsPerMM;
   double delayPulse;
   double delayWait;
+
+
   
   void StepperInit() {
     SetStepType(Sixteenth);
@@ -47,19 +49,31 @@ namespace cnc {
   void MoveToHome() {
     // Prebaci na full step i spremi trenutni step
     StepType stepTmp = stepType;
-    SetStepType(Half); 
-
-    WakeUp();
-    // Postavi glavu na (0,0)    
+    SetStepType(Full); 
+  
     MoveZ(false);
+    
+    // Postavi glavu na (0,0)  
+    WakeUp();
     MoveX(-400.0);
     MoveY(-400.0);
     MoveX(HOME_OFFSET);
     MoveY(HOME_OFFSET);
     Sleep();
 
+    SetStepType(Sixteenth);
+
+    // Precizna kalibracija
+    WakeUp();
+    MoveX(-400.0);
+    MoveY(-400.0);
+    MoveX(HOME_OFFSET);
+    MoveY(HOME_OFFSET);
+    Sleep();
+    
     // Vrati na prvobitni step
     SetStepType(stepTmp);
+    
     x_poss = 0;
     y_poss = 0;
   }
@@ -115,6 +129,12 @@ namespace cnc {
   void MoveFor(double x, double y, bool wait=true) {
     x_poss += x;
     y_poss += y;
+
+    if (x_poss >= MAX_X_DIMENSION || y_poss >= MAX_Y_DIMENSION) {      
+      Serial.println("error!");
+      EndProgram();
+      return;
+    }
     
     bool negativeX = (x < 0);
     bool negativeY = (y < 0);
@@ -189,7 +209,7 @@ namespace cnc {
       case Full:
         stepsPerMM = STEPS_PER_MM;
         delayPulse = 500;
-        delayWait = 2000;
+        delayWait = 1200;
         break;
       case Half: 
         digitalWrite(MS1, HIGH);
@@ -208,15 +228,15 @@ namespace cnc {
         digitalWrite(MS2, HIGH);
         stepsPerMM = STEPS_PER_MM * 8;
         delayPulse = 200;
-        delayWait = 200;
+        delayWait = 300;
         break;
       case Sixteenth:
         digitalWrite(MS1, HIGH);
         digitalWrite(MS2, HIGH);
         digitalWrite(MS3, HIGH);
         stepsPerMM = STEPS_PER_MM * 16;
-        delayPulse = 75;
-        delayWait = 150;
+        delayPulse = 100;
+        delayWait = 300;
         break;
     }
   }  

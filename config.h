@@ -35,10 +35,12 @@
 #define SLEEP 5
 
 // CONTROL VAR
-#define STEPS_PER_MM 5.011d
-#define HOME_OFFSET 10 // n MM from (0, 0)
+#define STEPS_PER_MM 5.0d
+#define HOME_OFFSET 5 // n MM from (0, 0)
+#define MAX_X_DIMENSION 300
+#define MAX_Y_DIMENSION 280
 
 // SERIAL SPEED
-#define BAUD_RATE 1200
+#define BAUD_RATE 9600
 
 #endif
